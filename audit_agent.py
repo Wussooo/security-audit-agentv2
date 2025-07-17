@@ -213,31 +213,45 @@ contract Exploit {{
 # ─── Phase 7: Report Generation ────────────────────────────────────────────────
 
 def generate_report():
-    slither = json.load(open(os.path.join(WORKSPACE_DIR, "slither-output.json")))
-    gas    = json.load(open(os.path.join(WORKSPACE_DIR, "gas-optimizations.json")))
-    now    = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    """
+    Aggregate findings and write an Immunefi‑style Markdown report.
+    """
+    print("[REPORT] Generating Markdown report...")
+    # Load analysis outputs
+    slither_data = json.load(open(os.path.join(WORKSPACE_DIR, "slither-output.json")))
+    gas_data     = json.load(open(os.path.join(WORKSPACE_DIR, "gas-optimizations.json")))
+
+    # Timestamp
+    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
     with open(REPORT_FILE, "w") as rpt:
-        rpt.write(f"# Security Audit Report\n\n")
+        rpt.write("# Security Audit Report\n\n")
         rpt.write(f"- **Date:** {now}\n")
         rpt.write(f"- **Scope:** `{WORKSPACE_DIR}`\n\n")
+
         rpt.write("## Summary of Findings\n\n")
-        rpt.write(f"- Slither issues: {len(slither)} items\n")
-        rpt.write(f"- Gas optimizations: {len(gas)} items\n\n")
+        rpt.write(f"- Slither issues: {len(slither_data)} items\n")
+        rpt.write(f"- Gas optimizations: {len(gas_data)} items\n\n")
+
         rpt.write("## Detailed Findings\n\n")
-        for idx, issue in enumerate(slither, 1):
-            sev = issue.get("severity", "Unknown")
-            title = issue.get("check", "Unnamed")
-            rpt.write(f"### {idx}. {title} ({sev})\n")
-            rpt.write(f"> {issue.get('description', '').splitlines()[0]}\n\n")
+        for idx, issue in enumerate(slither_data, 1):
+            title = issue.get("check", "Unknown issue")
+            severity = issue.get("severity", "Unknown")
+            desc = issue.get("description", "").splitlines()[0]
+            rpt.write(f"### {idx}. {title} ({severity})\n")
+            rpt.write(f"> {desc}\n\n")
             rpt.write("**Reproduction:**\n```bash\nslither .\n```\n\n")
             rpt.write("---\n\n")
+
         rpt.write("## Gas Optimizations\n\n")
-        for item in gas:
-            rpt.write(f"- {item}\n")
+        for opt in gas_data:
+            rpt.write(f"- {opt}\n")
         rpt.write("\n---\n\n")
+
         rpt.write("## Proof‑of‑Concepts\n\n")
-        rpt.write("See `/pocs/ReentrancyExploit.sol` for a reentrancy example.\n")
-    print(f"[REPORT] Generated {REPORT_FILE}")
+        rpt.write("See `./pocs/ReentrancyExploit.sol` for an example exploit.\n")
+
+    print(f"[REPORT] Markdown report written to {REPORT_FILE}")
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
 
