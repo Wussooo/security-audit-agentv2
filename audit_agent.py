@@ -26,9 +26,11 @@ REPORT_FILE   = "audit_report.md"
 def run(cmd, cwd=None, capture=False):
     """Run a shell command, exit on failure."""
     print(f"\n>>> RUN: {cmd}")
-    result = subprocess.run(cmd, shell=True, cwd=cwd,
-                            stdout=subprocess.PIPE if capture else None,
-                            stderr=subprocess.STDOUT)
+    result = subprocess.run(
+        cmd, shell=True, cwd=cwd,
+        stdout=subprocess.PIPE if capture else None,
+        stderr=subprocess.STDOUT
+    )
     if result.returncode != 0:
         print(f"ERROR: command failed: {cmd}")
         if capture:
@@ -37,13 +39,17 @@ def run(cmd, cwd=None, capture=False):
     return result.stdout.decode() if capture else ""
 
 def ensure_tool(name, check_cmd, install_cmd):
-    """Check for tool, install if missing."""
+    """Check for a tool; install it if missing."""
     try:
-        subprocess.run(check_cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(
+            check_cmd, shell=True,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
         print(f"[OK] {name} found")
-    except Exception:
+    except:
         print(f"[INSTALL] Installing {name}")
         run(install_cmd)
+
 
 # ─── Phase 1: Scope Initialization ──────────────────────────────────────────────
 
