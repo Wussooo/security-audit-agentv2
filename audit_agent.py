@@ -122,7 +122,16 @@ def install_tools():
 # ─── Phase 3: Static Analysis with Slither ─────────────────────────────────────
 
 def run_static_analysis():
-    out = run("slither . --json slither-output.json", cwd=WORKSPACE_DIR, capture=True)
+    """
+    Run Slither to perform static analysis and save JSON output.
+    """
+    # Execute Slither with JSON output
+    print("[STATIC] Running Slither analysis...")
+    run(
+        "slither . --json slither-output.json",
+        cwd=WORKSPACE_DIR,
+        capture=True
+    )
     print("[SLITHER] Output saved to slither-output.json")
 
 # ─── Phase 4: Gas Optimization Analysis ────────────────────────────────────────
