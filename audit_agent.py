@@ -137,19 +137,25 @@ def run_static_analysis():
 # ─── Phase 4: Gas Optimization Analysis ────────────────────────────────────────
 
 def run_gas_analysis():
-    # Naïve pattern search
+    """
+    Scan contracts for gas optimization patterns and save findings.
+    """
+    print("[GAS] Analyzing gas usage...")
     issues = []
-    for root, _, files in os.walk(os.path.join(WORKSPACE_DIR)):
+    for root, _, files in os.walk(WORKSPACE_DIR):
         for f in files:
             if f.endswith(".sol"):
                 path = os.path.join(root, f)
                 with open(path) as fd:
                     src = fd.read()
+                # Detect variable packing opportunities
                 if "uint256" in src and "struct" in src:
                     issues.append(f"{f}: check variable packing")
-    with open(os.path.join(WORKSPACE_DIR, "gas-optimizations.json"), "w") as fd:
-        json.dump(issues, fd, indent=2)
+    # Save to JSON
+    with open(os.path.join(WORKSPACE_DIR, "gas-optimizations.json"), "w") as out:
+        json.dump(issues, out, indent=2)
     print("[GAS] Findings saved to gas-optimizations.json")
+
 
 # ─── Phase 5: Dynamic Testing & Fuzzing ────────────────────────────────────────
 
