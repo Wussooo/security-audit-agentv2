@@ -54,17 +54,23 @@ def ensure_tool(name, check_cmd, install_cmd):
 # ─── Phase 1: Scope Initialization ──────────────────────────────────────────────
 
 def init_workspace(git_url, local_path):
-    # 1. Create workspace folder
+    # 1. Remove old workspace if it exists
     if os.path.exists(WORKSPACE_DIR):
         shutil.rmtree(WORKSPACE_DIR)
+    # 2. Create fresh workspace
     os.makedirs(WORKSPACE_DIR)
-    # 2. Clone or copy code
+    # 3. Clone or copy code
     if git_url:
         run(f"git clone {git_url} .", cwd=WORKSPACE_DIR)
     else:
         abs_path = os.path.abspath(local_path)
-        shutil.copytree(abs_path, os.path.join(WORKSPACE_DIR), dirs_exist_ok=True)
-    print(f"[WORKSPACE] Code in ./{WORKSPACE_DIR}")
+        shutil.copytree(
+            abs_path,
+            WORKSPACE_DIR,
+            dirs_exist_ok=True
+        )
+    print(f"[WORKSPACE] Code available in ./{WORKSPACE_DIR}")
+
 
 # ─── Phase 2: Tools Setup & Installation ────────────────────────────────────────
 
