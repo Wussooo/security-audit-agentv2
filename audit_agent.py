@@ -160,7 +160,11 @@ def run_gas_analysis():
 # ─── Phase 5: Dynamic Testing & Fuzzing ────────────────────────────────────────
 
 def run_dynamic_tests():
-    # decide framework
+    """
+    Decide framework (Foundry or Hardhat), compile, run tests, and fuzz.
+    """
+    print("[DYNAMIC] Running dynamic tests and fuzzing...")
+    # Detect Foundry via foundry.toml
     use_foundry = os.path.exists(os.path.join(WORKSPACE_DIR, "foundry.toml"))
     if use_foundry:
         run("forge build", cwd=WORKSPACE_DIR)
@@ -169,6 +173,7 @@ def run_dynamic_tests():
         run("npx hardhat compile", cwd=WORKSPACE_DIR)
         run("npx hardhat test", cwd=WORKSPACE_DIR)
     print("[DYNAMIC] Tests & fuzzing complete")
+
 
 # ─── Phase 6: Exploit Generation (Proof‑of‑Concept) ─────────────────────────────
 
