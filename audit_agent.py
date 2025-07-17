@@ -75,25 +75,49 @@ def init_workspace(git_url, local_path):
 # ─── Phase 2: Tools Setup & Installation ────────────────────────────────────────
 
 def install_tools():
-    ensure_tool("slither", "slither --version", "pip install slither-analyzer")
-    # Foundry
+    # Slither (static analysis)
+    ensure_tool(
+        "slither",
+        "slither --version",
+        "pip install slither-analyzer"
+    )
+
+    # Foundry (dynamic testing & fuzzing)
     try:
-        subprocess.run("forge --version", shell=True, stdout=subprocess.DEVNULL)
+        subprocess.run(
+            "forge --version",
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
         print("[OK] Foundry detected")
     except:
         print("[INSTALL] Foundry")
         run("curl -L https://foundry.paradigm.xyz | bash && foundryup")
+
     # Hardhat fallback
     try:
-        subprocess.run("npx hardhat --version", shell=True, stdout=subprocess.DEVNULL)
+        subprocess.run(
+            "npx hardhat --version",
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
         print("[OK] Hardhat detected")
     except:
         print("[INSTALL] Hardhat (npm)")
         run("npm install --save-dev hardhat")
-    # solc
-    ensure_tool("solc", "solc --version", "npm install -g solc")
-    # Python libs
+
+    # Solidity compiler
+    ensure_tool(
+        "solc",
+        "solc --version",
+        "npm install -g solc"
+    )
+
+    # Python libraries for reporting
     run("pip install rich requests")
+
 
 # ─── Phase 3: Static Analysis with Slither ─────────────────────────────────────
 
