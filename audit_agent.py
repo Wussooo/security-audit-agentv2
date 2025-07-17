@@ -257,12 +257,22 @@ def generate_report():
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Security Audit Agent: static + dynamic analysis + report + PoC")
+        description="Security Audit Agent: static + dynamic analysis + report + PoC"
+    )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("-g", "--git",    help="GitHub repo URL to clone")
-    group.add_argument("-c", "--copy",   help="Local folder path to copy")
-    parser.add_argument("-o", "--output", help="Output report filename",
-                        default=REPORT_FILE)
+    group.add_argument(
+        "-g", "--git",
+        help="GitHub repo URL to clone"
+    )
+    group.add_argument(
+        "-c", "--copy",
+        help="Local folder path to copy"
+    )
+    parser.add_argument(
+        "-o", "--output",
+        help="Output report filename",
+        default=REPORT_FILE
+    )
     args = parser.parse_args()
 
     install_tools()
@@ -271,7 +281,7 @@ def main():
     run_gas_analysis()
     run_dynamic_tests()
     generate_pocs()
-    # rename report if custom
+    # If the user specified a custom report name, use it
     global REPORT_FILE
     REPORT_FILE = args.output
     generate_report()
