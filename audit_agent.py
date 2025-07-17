@@ -178,9 +178,14 @@ def run_dynamic_tests():
 # ─── Phase 6: Exploit Generation (Proof‑of‑Concept) ─────────────────────────────
 
 def generate_pocs():
+    """
+    Generate basic PoC contracts for confirmed issues.
+    """
+    print("[PoC] Generating proof‑of‑concept contracts...")
     poc_dir = os.path.join(WORKSPACE_DIR, "pocs")
     os.makedirs(poc_dir, exist_ok=True)
-    # Example template for reentrancy PoC
+
+    # Example template for a reentrancy PoC
     template = """// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 interface IVictim { function withdraw() external; function deposit() payable external; }
@@ -198,10 +203,12 @@ contract Exploit {{
     }}
 }}
 """
+    # Write template to file
     poc_path = os.path.join(poc_dir, "ReentrancyExploit.sol")
     with open(poc_path, "w") as fd:
         fd.write(template)
-    print(f"[PoC] Reentrancy PoC written to {poc_path}")
+    print(f"[PoC] Reentrancy PoC saved to {poc_path}")
+
 
 # ─── Phase 7: Report Generation ────────────────────────────────────────────────
 
