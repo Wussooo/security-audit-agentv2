@@ -255,7 +255,8 @@ def generate_report():
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
 
-def main():    global REPORT_FILE
+def main():
+    global REPORT_FILE
 
     parser = argparse.ArgumentParser(
         description="Security Audit Agent: static + dynamic analysis + report + PoC"
@@ -283,7 +284,6 @@ def main():    global REPORT_FILE
     run_dynamic_tests()
     generate_pocs()
     # If the user specified a custom report name, use it
-    global REPORT_FILE
     REPORT_FILE = args.output
     generate_report()
 
