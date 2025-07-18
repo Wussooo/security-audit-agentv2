@@ -255,7 +255,8 @@ def generate_report():
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
 
-def main():
+def main():    global REPORT_FILE
+
     parser = argparse.ArgumentParser(
         description="Security Audit Agent: static + dynamic analysis + report + PoC"
     )
