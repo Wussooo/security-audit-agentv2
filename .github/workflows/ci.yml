@@ -1,0 +1,35 @@
+name: Audit Agent CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install slither-analyzer rich requests
+          npm install --save-dev hardhat
+          curl -L https://foundry.paradigm.xyz | bash
+          foundryup || echo "Foundry already installed"
+
+      - name: Run audit agent (dry‑run)
+        run: |
+          mkdir test_target
+          echo 'pragma solidity ^0.8.0; contract A {}' > test_target/A.sol
+          python audit_agent.py -c test_target -o ci_report.md
