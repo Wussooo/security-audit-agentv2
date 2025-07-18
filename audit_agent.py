@@ -161,17 +161,12 @@ def run_gas_analysis():
 
 def run_dynamic_tests():
     """
-    Decide framework (Foundry or Hardhat), compile, run tests, and fuzz.
+    Always use Foundry: compile, run tests, and fuzz.
     """
-    print("[DYNAMIC] Running dynamic tests and fuzzing...")
-    # Detect Foundry via foundry.toml
-    use_foundry = os.path.exists(os.path.join(WORKSPACE_DIR, "foundry.toml"))
-    if use_foundry:
-        run("forge build", cwd=WORKSPACE_DIR)
-        run("forge test --fuzz", cwd=WORKSPACE_DIR)
-    else:
-        run("npx hardhat compile", cwd=WORKSPACE_DIR)
-        run("npx hardhat test", cwd=WORKSPACE_DIR)
+    print("[DYNAMIC] Running dynamic tests and fuzzing with Foundry...")
+    # Foundry build & fuzz
+    run("forge build", cwd=WORKSPACE_DIR)
+    run("forge test --fuzz", cwd=WORKSPACE_DIR)
     print("[DYNAMIC] Tests & fuzzing complete")
 
 
